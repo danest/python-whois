@@ -83,7 +83,7 @@ def get_root_server(domain):
 	raise shared.WhoisException("No root WHOIS server found for domain.")
 
 def whois_request(domain, server, port=43):
-	puts "WHOIS REQUEST"
+	print "WHOIS REQUEST"
 	sock = socks.socksocket()
 	sock.setdefaultproxy(sock.PROXY_TYPE_HTTP,"173.208.36.188", 3128)
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -1,4 +1,5 @@
 import socket, re, sys
+import socks
 from codecs import encode, decode
 from . import shared
 
@@ -14,7 +15,7 @@ def get_whois_raw(domain, server="", previous=None, rfc3490=True, never_cut=Fals
 		# The following is a bit hacky, but IANA won't return the right answer for example.com because it's a direct registration.
 		"example.com": "whois.verisign-grs.com"
 	}
-	
+
 	if rfc3490:
 		if sys.version_info < (3, 0):
 			domain = encode( domain if type(domain) is unicode else decode(domain, "utf8"), "idna" )
@@ -71,7 +72,7 @@ def get_whois_raw(domain, server="", previous=None, rfc3490=True, never_cut=Fals
 		return (new_list, server_list)
 	else:
 		return new_list
-	
+
 def get_root_server(domain):
 	data = whois_request(domain, "whois.iana.org")
 	for line in [x.strip() for x in data.splitlines()]:
@@ -80,8 +81,11 @@ def get_root_server(domain):
 			continue
 		return match.group(1)
 	raise shared.WhoisException("No root WHOIS server found for domain.")
-	
+
 def whois_request(domain, server, port=43):
+	puts "WHOIS REQUEST"
+	sock = socks.socksocket()
+	sock.setdefaultproxy(sock.PROXY_TYPE_HTTP,"173.208.36.188", 3128)
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((server, port))
 	sock.send(("%s\r\n" % domain).encode("utf-8"))

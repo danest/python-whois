@@ -85,7 +85,7 @@ def get_root_server(domain):
 def whois_request(domain, server, port=43):
 	print "WHOIS REQUEST"
 	sock = socks.socksocket()
-	sock.setdefaultproxy(sock.PROXY_TYPE_HTTP,"173.208.36.188", 3128)
+	sock.setproxy(sock.PROXY_TYPE_HTTP,"173.208.36.188", 3128)
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((server, port))
 	sock.send(("%s\r\n" % domain).encode("utf-8"))
